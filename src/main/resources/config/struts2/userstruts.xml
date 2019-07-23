@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd"
+	>
+<struts>
+	<constant name="struts.action.extension" value="action,do" />
+	<package name="test" extends="struts-default,json-default">
+		<action name="stAction"
+			class="com.hxzy.telexam.actions.UserinfoController" method="add">
+			<result name="success" type="redirectAction">stListAction</result>
+		</action>
+
+		<action name="stListAction"
+			class="com.hxzy.telexam.actions.UserinfoController" method="query">
+			<result name="success">/jsp/user/usersuccess.jsp</result>
+		</action>
+
+		<action name="stdeleteAction"
+			class="com.hxzy.telexam.actions.UserinfoController" method="delete">
+			<result name="success" type="redirectAction">stListAction</result>
+		</action>
+
+		<action name="toUpdateAction"
+			class="com.hxzy.telexam.actions.UserinfoController" method="toUpdate">
+			<result name="success">jsp/user/saveOrUpdate.jsp</result>
+		</action>
+
+		<action name="toLoginAction"
+			class="com.hxzy.telexam.actions.UserinfoController" method="login">
+			<result name="Loginsucceed">jsp/paper/selectpaper.jsp</result>
+			<result name="AdminSucceed">adminManager.jsp</result>
+			<result name="LoginFaile">jsp/user/usererror.jsp</result>
+		</action>
+
+		 <action name="UserinfoQueryAction" class="com.hxzy.telexam.actions.UserinfoController" method="querys">
+            <result type="json" name="success">
+                <param name="root">result</param>
+            </result> 
+        </action>
+
+		<action name="addDefaultUserAction" class="com.hxzy.telexam.actions.UserinfoController" method="addDefaultUserAction">
+			<result type="json" name="success">
+				<param name="root">result</param>
+			</result>
+		</action>
+	</package>
+</struts>    

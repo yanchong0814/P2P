@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="paper" namespace="/paper" extends="struts-default,json-default">
+        <action name="queryAction" class="com.hxzy.telexam.actions.PaperAction" method="queryAction">
+            <result type="json">
+                <param name="root">result</param>
+            </result>
+        </action>
+        <action name="saveAction" class="com.hxzy.telexam.actions.PaperAction" method="saveAction">
+            <result name="success" type="redirectAction">queryPaperAction</result>
+        </action>
+        <action name="examAction" class="com.hxzy.telexam.actions.PaperAction" method="examAction">
+            <result type="json">
+                <param name="root">result</param>
+            </result>
+        </action>
+        <action name="queryPaperAction" class="com.hxzy.telexam.actions.PaperAction" method="queryPaperAction">
+            <result name="success" >/jsp/paper/managepaper.jsp</result>
+        </action>
+        <action name="PaperAction" class="com.hxzy.telexam.actions.PaperAction" method="queryPaperAction">
+            <result name="success" type="json">
+                <param name="root">result</param>
+            </result>
+        </action>
+        <action name="deleteAction" class="com.hxzy.telexam.actions.PaperAction" method="deleteAction">
+            <result name="success" type="redirectAction">queryPaperAction</result>
+        </action>
+        <!-- 文件下载 -->
+        <action name="fileDown" class="com.hxzy.telexam.actions.FileDownAction">
+            <result name="success" type="stream">
+                <!-- 指定下载文件的内容类型，text/plain是默认类型contentType, application/octet-stream 表示无限制 -->
+                <param name="contentType">application/octet-stream</param>
+                <!-- inputName默认值是inputStream，如果action中用于读取下载文件内容的属性名是inputStream，那么可以省略这个参数 -->
+                <param name="inputName">inputStream</param>
+                <!--动态获取文件名，从Action中的取得filename-->
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+    </package>
+</struts>

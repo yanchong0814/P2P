@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="scores" namespace="/scores" extends="struts-default,json-default">
+        <action name="saveAction" class="com.hxzy.telexam.actions.ScoresAction" method="saveAction">
+            <result name="success" type="json">
+                <param name="root">result</param>
+            </result>
+        </action>
+        
+        <action name="queryAction" class="com.hxzy.telexam.actions.ScoresAction" method="queryAction">
+            <result name="success">/jsp/scores/scores.jsp</result>
+        </action>
+
+        <action name="scdeleteAction"
+			class="com.hxzy.telexam.actions.ScoresAction" method="delete">
+			<result name="success" type="redirectAction">queryAction</result>
+		</action>
+
+        <action name="paperAction" class="com.hxzy.telexam.actions.ScoresAction" method="paperAction">
+            <result type="json">
+                <param name="root">result</param>
+            </result>
+        </action>
+    </package>
+</struts>

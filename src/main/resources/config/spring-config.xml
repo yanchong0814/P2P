@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd">
+	<!-- 数据源 -->
+	<context:property-placeholder
+		location="classpath:config/hibernate.properties" />
+	<bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="user" value="${dataSource.username}" />
+		<property name="password" value="${dataSource.password}" />
+		<property name="driverClass" value="${dataSource.driverClass}" />
+		<property name="jdbcUrl" value="${dataSource.jdbcUrl}" />
+		<property name="acquireIncrement" value="${dataSource.acquireIncrement}" />
+		<property name="maxPoolSize" value="${dataSource.maxPoolSize}" />
+		<property name="minPoolSize" value="${dataSource.minPoolSize}" />
+		<property name="initialPoolSize" value="${dataSource.initialPoolSize}"/>
+		<property name="checkoutTimeout" value="${dataSource.checkoutTimeout}" />
+		<property name="acquireRetryAttempts" value="${dataSource.acquireRetryAttempts}" />
+		<property name="maxIdleTime" value="${dataSource.maxIdleTime}" />
+	</bean>
+
+
+	<!--配置 Hibernate SessionFatory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<!-- 配置数据源属性 -->
+		<property name="dataSource" ref="datasource" />
+		<!-- 配置加载实体类 -->
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:com/hxzy/telexam/beans/</value>
+			</list>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.hxzy.telexam.beans</value>
+			</list>
+		</property>
+		<!-- 配置 Hibernate 方言、是否打印SQL语句、是否启用查询缓存 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${dataSource.dialect}</prop>   <!-- Hibernate SQL方言 -->
+				<prop key="hibernate.hbm2ddl.auto">${dataSource.hbm2ddl.auto}</prop>
+				<prop key="hibernate.show_sql">${dataSource.show_sql}</prop>  <!-- 输出所有SQL语句到控制台.取值true | false -->
+				<prop key="hibernate.current_session_context_class">${dataSource.current_session_context_class}</prop>
+				<prop key="hibernate.cache.use_query_cache">${dataSource.cache.use_query_cache}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 配置数据连接事务 -->
+	<bean id="examManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!--扫描定时任务中注解-->
+	<context:annotation-config />
+	<!-- 扫描指定包下的被注解的类,创建对象 -->
+	<context:component-scan
+		base-package="com.hxzy.telexam.*" />
+	<!-- 注解的方式开启事务 -->
+	<tx:annotation-driven
+		transaction-manager="examManager" />
+	<!-- 切面扫描 -->
+	<aop:aspectj-autoproxy />
+	<!-- 划扣定时任务调度 -->
+	<!--
+	一个cron表达式有至少6个（也可能7个）有空格分隔的时间元素。
+	按顺序依次为
+	秒（0~59）
+	分钟（0~59）
+	小时（0~23）
+	天（月）（0~31，但是你需要考虑你月的天数）
+	月（0~11）
+	天（星期）（1~7 1=SUN 或 SUN，MON，TUE，WED，THU，FRI，SAT）
+	年份（1970－2099）
+	 -->
+    <bean id="timetaskService" class="com.hxzy.telexam.service.implement.TimetaskService"/>
+
+	<task:scheduled-tasks>
+		<task:scheduled ref="timetaskService" method="toPaperStatus" cron="0 0/1 * * * ?"/>
+	</task:scheduled-tasks>
+
+	<task:scheduler id="scheduler" pool-size="10" />
+	<task:executor id="executor"  pool-size="100-200" />
+	<task:annotation-driven executor="executor" scheduler="scheduler" />
+
+
+</beans>

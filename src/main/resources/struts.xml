@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+  <constant name="struts.action.extension" value="action,do"/>
+  <!-- 指定由spring负责action对象的创建 -->
+  <constant name="struts.objectFactory" value="spring" />
+  <!-- 是否启用开发模式 -->
+  <constant name="struts.devMode" value="true" />
+  <!-- 让struts2支持动态方法调用 -->
+  <constant name="struts.enable.DynamicMethodInvocation" value="true" />
+  
+  <include file="config/struts2/ztree.xml"/>
+  <include file="config/struts2/struts_que.xml"/>
+  <include file="config/struts2/struts_paper.xml"/>
+  <include file="config/struts2/userstruts.xml"/>
+  <include file="config/struts2/struts_scores.xml"/>
+</struts>
+

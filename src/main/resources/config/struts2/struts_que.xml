@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd"
+	>
+<struts>
+	<package name="question" extends="struts-default,json-default">
+        <action name="QuestionActions" class="com.hxzy.telexam.actions.QuestionActions" method="saveOrUpdate">
+            <!-- <result name="success">/jsp/questionanswer/addOrUpdate.jsp</result> -->
+             <result type="json">
+                <param name="root">result</param>
+            </result> 
+        </action>
+        <action name="QuestionQueryAction" class="com.hxzy.telexam.actions.QuestionActions" method="query">
+            <!-- <result name="success">/jsp/questionanswer/question.jsp</result> -->
+            <result type="json">
+                <param name="root">result</param>
+            </result> 
+        </action>
+        <action name="QusetionDeleteAction" class="com.hxzy.telexam.actions.QuestionActions" method="delete">
+            <!-- <result name="success">/jsp/questionanswer/questions.jsp</result> -->
+            <result type="json">
+                <param name="root">result</param>
+            </result> 
+        </action>
+        <action name="QuestionUpdateAction" class="com.hxzy.telexam.actions.QuestionActions" method="update">
+            <!-- <result name="success">/jsp/questionanswer/question.jsp</result>  -->
+            <result type="json">
+                <param name="root">result</param>
+            </result>
+        </action>
+        <action name="QuestionShowAction" class="com.hxzy.telexam.actions.QuestionActions" method="update">
+            <!-- <result name="success">/jsp/questionanswer/question.jsp</result> --> 
+            <result type="json">
+                <param name="root">result</param>
+            </result>
+        </action>
+    </package>
+
+</struts>
